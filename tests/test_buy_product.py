@@ -2,8 +2,10 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 
-from pages.login_page import LoginPage
+from pages.basket_page import BasketPage
+from pages.clothes_page import ClothesPage
 from pages.main_page import MainPage
+from pages.product_page import ProductPage
 
 
 def test_buy_product():
@@ -16,6 +18,13 @@ def test_buy_product():
 
     mp = MainPage(driver)
     mp.authorisation()
-    mp.search_the_mens_jacket()
+    mp.go_to_clothes_page()
 
+    cp = ClothesPage(driver)
+    cp.search_the_jacket()
 
+    pp = ProductPage(driver)
+    pp.checkout_to_basket()
+
+    bp = BasketPage(driver)
+    bp.checkout()
