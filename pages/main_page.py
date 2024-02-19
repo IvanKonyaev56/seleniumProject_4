@@ -1,7 +1,6 @@
 import time
-from selenium.common import StaleElementReferenceException, ElementClickInterceptedException
-from selenium.webdriver import ActionChains
-from selenium.webdriver.common import actions
+
+from selenium.common import TimeoutException, ElementClickInterceptedException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -9,7 +8,6 @@ from base.base_class import Base
 
 
 class MainPage(Base):
-    url = 'https://usmall.ru/'
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -21,6 +19,7 @@ class MainPage(Base):
     username = '//input[@name="email"]'
     password = '//input[@name="password"]'
     login_button = '//button[@class="__btn-submit __shadow"]'
+    popup_body = '//div[@class="popmechanic-js-wrapper"]'
     popup_close_button = '//div[@class="popmechanic-close"]'
     men_header = '//a[contains(text(), "Мужчины")]'
     men_jacket = '/html/body/div[2]/div/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div/div[1]/div[1]/div/a[2]'
@@ -43,6 +42,10 @@ class MainPage(Base):
     def get_popup_close_button(self):
         return WebDriverWait(self.driver, 15).until(
             EC.element_to_be_clickable((By.XPATH, self.popup_close_button)))
+
+    def get_popup_body(self):
+        return WebDriverWait(self.driver, 1).until(
+            EC.element_to_be_clickable((By.XPATH, self.popup_body)))
 
     def get_men_header(self):
         return WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((By.XPATH, self.men_header)))
@@ -73,13 +76,20 @@ class MainPage(Base):
         print('Login_button clicked')
 
     def click_popup_close_button(self):
-        time.sleep(3)
-        self.get_popup_close_button().click()
-        print('Popup_close button clicked')
+        # Пришлось добавить цикл, т.к. часто клик происходил "успешно", но окно не закрывалось.
+        while True:
+            try:
+                self.get_popup_body()
+                self.get_popup_close_button().click()
+                print('Popup_close button clicked')
+                break
+            except TimeoutException:
+                continue
+            except ElementClickInterceptedException:
+                continue
 
     def move_to_men_header(self):
-        actions = ActionChains(self.driver)
-        actions.move_to_element(self.get_men_header()).perform()
+        self.move_to_element(self.get_men_header())
         print('Move to men_header')
 
     def click_men_jacket_header(self):
@@ -93,16 +103,15 @@ class MainPage(Base):
     # Methods
 
     def authorisation(self):
-        self.driver.get(self.url)
-        self.driver.maximize_window()
-        self.click_auth_button()
-        self.fill_in_the_user_name_field()
-        self.fill_in_the_password_field()
-        self.click_login_button()
-        self.get_current_url()
+        # self.click_auth_button()
+        # self.fill_in_the_user_name_field()
+        # self.fill_in_the_password_field()
+        # self.click_login_button()
         self.click_popup_close_button()
         self.click_cookie_banner_button()
 
     def go_to_clothes_page(self):
         self.move_to_men_header()
         self.click_men_jacket_header()
+
+        # self.assert_url('https://usmall.ru/products/men/clothes/down-insulated-coats')

@@ -1,5 +1,4 @@
 import time
-from selenium.webdriver import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -42,3 +41,4 @@ class ProductPage(Base):
     def checkout_to_basket(self):
         self.click_cart_button()
         self.click_checkout_button()
+        # self.assert_url('https://usmall.ru/basket')

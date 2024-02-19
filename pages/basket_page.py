@@ -1,7 +1,4 @@
 import time
-from selenium.common import StaleElementReferenceException, ElementClickInterceptedException
-from selenium.webdriver import ActionChains
-from selenium.webdriver.common import actions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -26,6 +23,7 @@ class BasketPage(Base):
     # Actions
 
     def click_checkout_button(self):
+        time.sleep(3)
         self.get_checkout_button().click()
         print('Checkout_button clicked')
         # Добавить проверу что введены корректные данные пользователя и сумма
@@ -34,3 +32,4 @@ class BasketPage(Base):
 
     def checkout(self):
         self.click_checkout_button()
+        # self.assert_url('https://usmall.ru/checkout')

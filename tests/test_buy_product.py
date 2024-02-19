@@ -13,8 +13,11 @@ def test_buy_product():
     options.add_experimental_option("detach", True)
     g = Service('E:\\1_QAA\\stepick\\resourses\\chromedriver.exe')
     driver = webdriver.Chrome(options=options, service=g)
+    url = 'https://usmall.ru/'
+    driver.get(url)
+    driver.maximize_window()
 
-    print('*** Start Test 1 ***')
+    print('*** Start Test ***')
 
     mp = MainPage(driver)
     mp.authorisation()
