@@ -1,5 +1,4 @@
 import time
-
 from selenium.common import TimeoutException, ElementClickInterceptedException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -24,38 +23,42 @@ class MainPage(Base):
     men_header = '//a[contains(text(), "Мужчины")]'
     men_jacket = '/html/body/div[2]/div/div/div[2]/div/div/div/div[2]/div[2]/div[1]/div/div[1]/div[1]/div/a[2]'
     cookie_banner_button = '//button[@data-btn="minor"]'
+    new_page_header = '//*[@id="__layout"]/div/section/div[1]/div[2]/h1'
 
     # Getters
 
     def get_auth_button(self):
-        return WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((By.XPATH, self.auth_button)))
+        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.auth_button)))
 
     def get_user_name_field(self):
-        return WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((By.XPATH, self.username)))
+        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.username)))
 
     def get_password_field(self):
-        return WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((By.XPATH, self.password)))
+        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.password)))
 
     def get_login_button(self):
-        return WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((By.XPATH, self.login_button)))
+        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.login_button)))
 
     def get_popup_close_button(self):
-        return WebDriverWait(self.driver, 15).until(
+        return WebDriverWait(self.driver, 30).until(
             EC.element_to_be_clickable((By.XPATH, self.popup_close_button)))
 
     def get_popup_body(self):
-        return WebDriverWait(self.driver, 1).until(
+        return WebDriverWait(self.driver, 30).until(
             EC.element_to_be_clickable((By.XPATH, self.popup_body)))
 
     def get_men_header(self):
-        return WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((By.XPATH, self.men_header)))
+        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.men_header)))
 
     def get_men_jacket_header(self):
-        return WebDriverWait(self.driver, 15).until(EC.element_to_be_clickable((By.XPATH, self.men_jacket)))
+        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.men_jacket)))
 
     def get_cookie_banner_button(self):
-        return WebDriverWait(self.driver, 15).until(
+        return WebDriverWait(self.driver, 30).until(
             EC.element_to_be_clickable((By.XPATH, self.cookie_banner_button)))
+
+    def get_new_page_header(self):
+        return WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, self.new_page_header)))
 
     # Actions
 
@@ -80,6 +83,7 @@ class MainPage(Base):
         while True:
             try:
                 self.get_popup_body()
+                time.sleep(1)
                 self.get_popup_close_button().click()
                 print('Popup_close button clicked')
                 break
@@ -103,15 +107,15 @@ class MainPage(Base):
     # Methods
 
     def authorisation(self):
-        # self.click_auth_button()
-        # self.fill_in_the_user_name_field()
-        # self.fill_in_the_password_field()
-        # self.click_login_button()
+        self.click_auth_button()
+        self.fill_in_the_user_name_field()
+        self.fill_in_the_password_field()
+        self.click_login_button()
         self.click_popup_close_button()
         self.click_cookie_banner_button()
 
     def go_to_clothes_page(self):
         self.move_to_men_header()
         self.click_men_jacket_header()
-
-        # self.assert_url('https://usmall.ru/products/men/clothes/down-insulated-coats')
+        self.get_assert_word(self.get_new_page_header(), 'Мужские пуховики')
+        self.assert_url('https://usmall.ru/products/men/clothes/down-insulated-coats')

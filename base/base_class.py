@@ -15,12 +15,6 @@ class Base:
         actions = ActionChains(self.driver)
         actions.move_to_element(locator).perform()
 
-    '''Method get current url'''
-
-    def get_current_url(self):
-        get_url = self.driver.current_url
-        print('Current URL ' + get_url)
-
     '''Method assert word'''
 
     def get_assert_word(self, word, result):
